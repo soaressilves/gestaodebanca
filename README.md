@@ -144,7 +144,7 @@ gestao-de-banca/
 
 ## ✒️ Autores
 
-* **Paulo** - *Desenvolvimento* - [Seu GitHub](https://github.com/seu-usuario)
+* **Paulo** - *Desenvolvimento* - [Seu GitHub](https://github.com/soaressilves)
 
 ## 📄 Licença
 
