@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Banca - Trading Esportivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body id="body-pd">
+    <!-- Sidebar -->
+    <header class="header" id="header">
+        <div class="header_toggle">
+            <i class='bx bx-menu' id="header-toggle"></i>
+        </div>
+        <div class="header_img">
+            <img src="https://i.imgur.com/hczKIze.jpg" alt="">
+        </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="#" class="nav_logo">
+                    <i class='bx bx-layer nav_logo-icon'></i>
+                    <span class="nav_logo-name">Gestão de Banca</span>
+                </a>
+                <div class="nav_list">
+                    <a href="#dashboard" class="nav_link active">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">Dashboard</span>
+                    </a>
+                    <a href="#nova-aposta" class="nav_link">
+                        <i class='bx bx-plus-circle nav_icon'></i>
+                        <span class="nav_name">Nova Aposta</span>
+                    </a>
+                    <a href="#lista-jogos" class="nav_link">
+                        <i class='bx bx-list-ul nav_icon'></i>
+                        <span class="nav_name">Lista de Jogos</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="height-100">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="container-fluid">
+            <h4 class="text-center mb-4">Dashboard</h4>
+            
+            <!-- Filtros -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Filtros</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Data Início</label>
+                            <input type="date" class="form-control" id="start-date">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Data Fim</label>
+                            <input type="date" class="form-control" id="end-date">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Mercado</label>
+                            <select class="form-control" id="mercado-filter"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Método</label>
+                            <select class="form-control" id="metodo-filter"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards de Métricas -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card" id="pl-card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">PL Total</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="card-title" id="pl-total">R$ 0.00</h4>
+                                <div class="variation-indicator">
+                                    <i class="bx"></i>
+                                    <span id="pl-variation">0%</span>
+                                </div>
+                            </div>
+                            <small class="text-muted">Anterior: <span id="pl-anterior">R$ 0.00</span></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card" id="winrate-card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Winrate</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="card-title" id="winrate">0%</h4>
+                                <div class="variation-indicator">
+                                    <i class="bx"></i>
+                                    <span id="winrate-variation">0%</span>
+                                </div>
+                            </div>
+                            <small class="text-muted">Anterior: <span id="winrate-anterior">0%</span></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card" id="roi-card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">ROI</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="card-title" id="roi">0%</h4>
+                                <div class="variation-indicator">
+                                    <i class="bx"></i>
+                                    <span id="roi-variation">0%</span>
+                                </div>
+                            </div>
+                            <small class="text-muted">Anterior: <span id="roi-anterior">0%</span></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card" id="stake-card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Stake Média</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="card-title" id="stake-media">R$ 0.00</h4>
+                                <div class="variation-indicator">
+                                    <i class="bx"></i>
+                                    <span id="stake-variation">0%</span>
+                                </div>
+                            </div>
+                            <small class="text-muted">Anterior: <span id="stake-anterior">R$ 0.00</span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico PL Acumulado -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">PL Acumulado</h5>
+                    <canvas id="pl-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráficos Adicionais -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">PL por Liga</h5>
+                            <canvas id="pl-liga-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">PL por Mercado</h5>
+                            <canvas id="pl-mercado-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">PL por Método</h5>
+                            <canvas id="pl-metodo-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="lista-jogos" class="container-fluid d-none">
+            <h4 class="text-center mb-4">Lista de Jogos</h4>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>País</th>
+                                <th>Liga</th>
+                                <th>Times</th>
+                                <th>Mercado</th>
+                                <th>Método</th>
+                                <th>PL</th>
+                                <th>Resultado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jogos-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <!-- Formulário Nova Aposta -->
+        <section id="nova-aposta" class="container-fluid d-none">
+            <h4 class="text-center mb-4">Nova Aposta</h4>
+            <div class="card">
+                <div class="card-body">
+                    <form id="aposta-form">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label>Data</label>
+                                <input type="date" class="form-control" name="data_aposta" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Hora</label>
+                                <input type="time" class="form-control" name="hora_aposta" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>País</label>
+                                <input type="text" class="form-control" name="pais" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label>Liga</label>
+                                <input type="text" class="form-control" name="liga" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Time Casa</label>
+                                <input type="text" class="form-control" name="time_casa" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Time Visitante</label>
+                                <input type="text" class="form-control" name="time_visitante" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label>Mercado</label>
+                                <input type="text" class="form-control" name="mercado" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Método</label>
+                                <input type="text" class="form-control" name="metodo" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Stake</label>
+                                <input type="number" step="0.01" class="form-control" name="stake" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label>Casa de Aposta</label>
+                                <input type="text" class="form-control" name="casa_aposta" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label>Odd de Entrada</label>
+                                <input type="number" step="0.01" class="form-control" name="odd_entrada" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label>Tipo de Entrada</label>
+                                <select class="form-control" name="tipo_entrada" required>
+                                    <option value="Pré Live">Pré Live</option>
+                                    <option value="Live">Live</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label>Tipo de Operação</label>
+                                <select class="form-control" name="tipo_operacao" required>
+                                    <option value="Back">Back</option>
+                                    <option value="Lay">Lay</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Tipo de Saída</label>
+                                <select class="form-control" name="tipo_saida" required>
+                                    <option value="Punter">Punter</option>
+                                    <option value="Cashout">Cashout</option>
+                                    <option value="Freebet">Freebet</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>PL (Lucro/Prejuízo)</label>
+                                <input type="number" step="0.01" class="form-control" name="pl" required>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Salvar Aposta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
